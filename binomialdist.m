@@ -1,0 +1,30 @@
+%% Plot Binomial Distributions as Histograms
+%
+subplot(2,2,1);
+    theta=1/4;
+    xs=0:1:10;
+    ps=binopdf(xs,10,theta);
+    bar(ps);
+    xlim([0 10]);
+    title('theta=0.25');
+subplot(2,2,2);
+    theta=1/2;
+    xs=0:1:10;
+    ps=binopdf(xs,10,theta);
+    bar(ps);
+    xlim([0 10]);
+    title('theta=0.5');
+subplot(2,2,3);
+    theta=3/4;
+    xs=0:1:10;
+    ps=binopdf(xs,10,theta);
+    bar(ps);
+    xlim([0 10]);
+    title('theta=0.75');
+ subplot(2,2,4);
+    theta=0.9;
+    xs=0:1:10;
+    ps=binopdf(xs,10,theta);
+    bar(ps);
+    xlim([0 10]);
+    title('theta=0.9');
