@@ -1,0 +1,2 @@
+# Deconstructed Deep RL
+This is a modular implementation of SOTA RL algorithms (i.e. REINFORCE, DQN, TRPO, PPO, A3C, DDPG, SAC). The repo is a part of an ongoing reseach project and will be published along with the paper.

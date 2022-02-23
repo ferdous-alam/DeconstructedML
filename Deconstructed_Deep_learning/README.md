@@ -1,0 +1,2 @@
+# Deconstructed Deep Learning
+This is a library for modular implementation of SOTA ML/deep learning algorithms (i.e. MLP, CNN, RNN, Autoencoders, GAN, VAE, Transformers). The repo is still in development.
