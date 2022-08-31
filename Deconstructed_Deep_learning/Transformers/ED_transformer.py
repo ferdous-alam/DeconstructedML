@@ -17,6 +17,33 @@ class Transformer(nn.Module):
     def forward(self, src: Tensor, tgt: Tensor, 
                 src_mask: Optional[Tensor] = None, tgt_mask: Optional[Tensor] = None, 
                 memory_mask: Optional[Tensor] = None): 
+                """
+                B = batch size
+                lx = target sequence length
+                lz = source sequence length
+                d_model = input embedding size
+
+                Args: 
+                    src: source batched tensor
+                    tgt: target batched tensor 
+                    src_mask: source sequence masking 
+                    tgt_mask: target sequence masking 
+                    memory_mask: memory sequence masking
+
+                returns: 
+                    output: 
+
+                shape: 
+                    src: (B, lz, d_model)
+                    tgt: (B, lx, d_model)
+                    src_mask: (lz, lz)
+                    tgt_mask: (lx, lx)
+                    memory_mask: (lx, lz)
+
+                NOTE:
+                Each mask is a tensor of ones and zeros,
+                zero is used where we want to mask the element
+                """
 
                 memory = self.encoder(src, attn_mask=src_mask)
                 output = self.decoder(tgt, memory, tgt_mask=tgt_mask, 

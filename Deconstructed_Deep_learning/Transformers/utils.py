@@ -425,35 +425,48 @@ def _scaled_dot_product_attention(q: Tensor, k: Tensor, v: Tensor, attn_mask: Op
     """
     B: batch size, 
     h: number of heads, 
-    L: target sequence length, 
-    S: target sequence length, 
+    l_z: target sequence length, 
+    l_x: target sequence length, 
     d_k: embedding dimension of key/query
     d_v: embedding dimension of value
 
     shape: 
-        Q: (B, h, L, d_k) 
-        K: (B, h, S, d_k) 
-        V: (B, h, S, d_v)
-        output: (B, h, L, d_v) 
+        q: (B, h, l_x, d_k) 
+        k: (B, h, l_z, d_k) 
+        v: (B, h, l_z, d_v)
+        attn_mask: (l_x, l_z), this is a tensor of 1s or zeros based on where we want to mask
+        output: (B, h, l_x, d_v) 
 
     Args: 
-        q: 
-        k: 
-        v:
-        attn_mask: 
+        q: query matrix
+        k: key matrix 
+        v: value matrix, 
+        attn_mask: attn mask matrix
 
     output: 
-        values: 
-        attn: 
+        values: attention values after multiplying value matrix with softmax output
+        attn: attention values after softmax
+
+    NOTE: 
+    attn_mask is given as the mask we would want for a single sequence
+    This mask MUST be repeated along the batch and heads dimension
+    As we are using 4-dimensional tensors as input, we no longer can use 
+    the badbmm of pytorch to calculate the attention, rather 
+    we use the equivalent of badbmm as a combination of matmul and add
     """
 
-    d_k = q.size()[-1]
+    B, h, d_k = q.size()[0], q.size()[1], q.size()[-1]
+    # mask all false elements in the attention mask with -inf values 
+    attn_mask = attn_mask.float().masked_fill(mask == 0, float('-inf')).masked_fill(mask == 1, float(0.0))
+
+    # calculate attention logits 
     attn_logits = torch.matmul(q, k.transpose(-2, -1))
 
     # scaling 
     attn_logits = attn_logits / math.sqrt(d_k)
 
     if attn_mask is not None:
+        attn_mask = attn_mask.repeat(B, h, 1, 1)  # repeat mask to match the attention logtis tensor shape
         attn_logits = torch.add(attn_mask, attn_logits)
 
     # softmax of attention logits
@@ -461,3 +474,4 @@ def _scaled_dot_product_attention(q: Tensor, k: Tensor, v: Tensor, attn_mask: Op
     # (B, Nt, Ns) x (B, Bs, d_k) --> (B, Nt, d_v)
     values = torch.matmul(attn, v)
     return values, attn
+
