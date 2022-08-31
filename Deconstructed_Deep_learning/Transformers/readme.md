@@ -4,9 +4,9 @@ This is a modular implementation of the Transformer architecture. It can be thou
 
 Explanation of notations: 
 1. $d_\text{model}:$ embedding dimension of each input element of the sequence
-2. $\text{num\_heads}:$ number of attention heads to implement multi-heads
-3. $\text{enc\_layer}:$ number of encoder layers to be implemented
-4. $\text{dec\_layer}:$ number of decoder layers to be implemented
+2. $\text{num}\_\text{heads}:$ number of attention heads to implement multi-heads
+3. $\text{enc}\_\text{layer}:$ number of encoder layers to be implemented
+4. $\text{dec}\_\text{layer}:$ number of decoder layers to be implemented
 
 First, define a custom encoder layer. The **utils.py** file contains a straighforward implementation of the original transformer encoder layer. You can use that as the following. 
 
