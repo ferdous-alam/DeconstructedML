@@ -456,8 +456,6 @@ def _scaled_dot_product_attention(q: Tensor, k: Tensor, v: Tensor, attn_mask: Op
     """
 
     B, h, d_k = q.size()[0], q.size()[1], q.size()[-1]
-    # mask all false elements in the attention mask with -inf values 
-    attn_mask = attn_mask.float().masked_fill(mask == 0, float('-inf')).masked_fill(mask == 1, float(0.0))
 
     # calculate attention logits 
     attn_logits = torch.matmul(q, k.transpose(-2, -1))
@@ -466,6 +464,8 @@ def _scaled_dot_product_attention(q: Tensor, k: Tensor, v: Tensor, attn_mask: Op
     attn_logits = attn_logits / math.sqrt(d_k)
 
     if attn_mask is not None:
+        # mask all false elements in the attention mask with -inf values 
+        attn_mask = attn_mask.float().masked_fill(attn_mask == 0, float('-inf')).masked_fill(attn_mask == 1, float(0.0))
         attn_mask = attn_mask.repeat(B, h, 1, 1)  # repeat mask to match the attention logtis tensor shape
         attn_logits = torch.add(attn_mask, attn_logits)
 
